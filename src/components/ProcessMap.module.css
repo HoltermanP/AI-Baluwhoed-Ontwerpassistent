@@ -1,0 +1,68 @@
+.processMap {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.phaseDecision {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.decisionItem {
+  padding: 13px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.decisionItem strong {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.decisionItem span {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.standardsList {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.standard {
+  padding: 13px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  border-left: 4px solid var(--green);
+}
+
+.standard strong {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.standard span {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@media (max-width: 1180px) {
+  .phaseDecision,
+  .standardsList {
+    grid-template-columns: 1fr;
+  }
+}

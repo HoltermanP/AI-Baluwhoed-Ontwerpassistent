@@ -1,0 +1,151 @@
+:root {
+  --ink: #0e2148;
+  --muted: rgba(14, 33, 72, 0.56);
+  --faint: rgba(14, 33, 72, 0.42);
+  --line: rgba(14, 33, 72, 0.09);
+  --line-strong: rgba(14, 33, 72, 0.14);
+  --paper: #f6f5f2;
+  --panel: #ffffff;
+  --soft: #faf9f7;
+  --blue: #1b4bad;
+  --blue-soft: #e3ebfb;
+  --green: #1b8a5a;
+  --green-soft: #dcf0e6;
+  --yellow: #e0a92b;
+  --yellow-soft: #fbeecb;
+  --red: #c0392b;
+  --red-soft: #fbe3e0;
+  --purple: #6a3fb0;
+  --purple-soft: #ece3fb;
+  --stone: #5b5344;
+  --stone-soft: #e5e2dc;
+  --shadow: 0 14px 40px rgba(14, 33, 72, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-hanken-grotesk), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 20px;
+  line-height: 1.08;
+}
+
+h2 {
+  margin-bottom: 2px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+h3 {
+  margin-bottom: 8px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--faint);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.section-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.section-heading.compact {
+  margin-bottom: 12px;
+}
+
+.step {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: var(--blue);
+  background: var(--blue-soft);
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+label {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+select,
+input,
+textarea {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  color: var(--ink);
+  background: var(--soft);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+}
+
+textarea {
+  resize: vertical;
+  line-height: 1.4;
+}
+
+fieldset {
+  margin: 4px 0 0;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+legend {
+  padding: 0 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}

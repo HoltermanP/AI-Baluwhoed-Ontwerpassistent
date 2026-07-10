@@ -1,0 +1,28 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 14px;
+  color: white;
+  background: var(--blue);
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: filter 0.15s;
+}
+
+.button:hover {
+  filter: brightness(1.08);
+}
+
+.dark {
+  background: var(--ink);
+}
+
+.selected {
+  background: var(--green);
+}

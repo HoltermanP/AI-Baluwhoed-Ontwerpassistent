@@ -1,0 +1,51 @@
+.sourceLayer {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.sourceGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.sourceItem {
+  min-height: 126px;
+  padding: 13px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.sourceItem strong {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.sourceItem span {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.sourceItem small {
+  display: inline-block;
+  margin-top: 9px;
+  padding: 3px 8px;
+  color: var(--stone);
+  background: var(--stone-soft);
+  border-radius: 20px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+@media (max-width: 1180px) {
+  .sourceGrid {
+    grid-template-columns: 1fr;
+  }
+}

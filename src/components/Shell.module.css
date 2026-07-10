@@ -1,0 +1,25 @@
+.shell {
+  display: grid;
+  grid-template-columns: minmax(330px, 382px) 1fr;
+  min-height: calc(100vh - 60px);
+}
+
+.workspace {
+  max-width: 1440px;
+  width: 100%;
+  padding: 32px 34px 40px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+@media (max-width: 1180px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .workspace {
+    padding: 16px;
+  }
+}

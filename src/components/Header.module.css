@@ -1,0 +1,130 @@
+.platformBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 32px;
+  color: white;
+  background: var(--ink);
+}
+
+.platformLeft,
+.platformBrand,
+.platformNav,
+.platformActions {
+  display: flex;
+  align-items: center;
+}
+
+.platformLeft {
+  gap: 32px;
+}
+
+.platformBrand {
+  gap: 11px;
+}
+
+.platformMark {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  color: var(--ink);
+  background: white;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.platformBrand strong {
+  font-size: 15px;
+  letter-spacing: 0.01em;
+}
+
+.platformBrand span {
+  padding-left: 11px;
+  color: rgba(255, 255, 255, 0.52);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.platformNav {
+  gap: 2px;
+}
+
+.navItem {
+  padding: 7px 13px;
+  color: rgba(255, 255, 255, 0.72);
+  border-radius: 7px;
+  font-size: 13px;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.navItem:hover,
+.navOn {
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.navOn {
+  font-weight: 600;
+}
+
+.platformActions {
+  gap: 18px;
+}
+
+.searchPill {
+  padding: 7px 12px;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  color: white;
+  background: #3f6bd6;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+@media (max-width: 1180px) {
+  .platformBar {
+    align-items: flex-start;
+    height: auto;
+    min-height: 60px;
+    padding: 14px 18px;
+  }
+
+  .platformLeft {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .platformActions {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .platformNav {
+    flex-wrap: wrap;
+  }
+
+  .platformBrand span {
+    display: none;
+  }
+}

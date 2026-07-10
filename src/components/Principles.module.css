@@ -1,0 +1,41 @@
+.principles {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 18px;
+}
+
+.principleList {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.principle {
+  min-height: 132px;
+  padding: 16px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.principle span {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.principle p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@media (max-width: 1180px) {
+  .principleList {
+    grid-template-columns: 1fr;
+  }
+}
