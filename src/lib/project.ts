@@ -247,7 +247,11 @@ export function analyseText(text: string): DocumentSignal[] {
   return signals;
 }
 
-export function readDocument(file: File): Promise<ProjectDocument> {
+export function isPdf(file: File): boolean {
+  return file.type === "application/pdf" || /\.pdf$/i.test(file.name);
+}
+
+export async function readDocument(file: File): Promise<ProjectDocument> {
   const base: ProjectDocument = {
     id: newId("doc"),
     name: file.name,
@@ -255,7 +259,16 @@ export function readDocument(file: File): Promise<ProjectDocument> {
     type: file.type || "onbekend",
     addedAt: new Date().toISOString().slice(0, 10)
   };
-  if (!isTextLike(file)) return Promise.resolve(base);
+  if (isPdf(file)) {
+    try {
+      const { extractPdfText } = await import("./pdfText");
+      const text = await extractPdfText(file, MAX_DOC_TEXT);
+      return text ? { ...base, text } : { ...base, note: "Geen tekst gevonden in pdf (mogelijk gescand; overweeg OCR)." };
+    } catch {
+      return { ...base, note: "PDF kon niet worden gelezen; alleen metadata bewaard." };
+    }
+  }
+  if (!isTextLike(file)) return base;
   return new Promise((resolve) => {
     const reader = new FileReader();
     reader.onload = () => resolve({ ...base, text: String(reader.result ?? "").slice(0, MAX_DOC_TEXT) });

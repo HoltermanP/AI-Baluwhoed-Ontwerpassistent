@@ -131,8 +131,8 @@ export default function ProjectIntake({
           >
             <strong>{busy ? "Documenten worden gelezen..." : "Projectdocumenten toevoegen"}</strong>
             <span>
-              Sleep plankaarten, PvE, MPG-rapport, opnames of notities hierheen. Tekstbestanden (.txt, .md, .csv) worden
-              gelezen op duurzaamheidssignalen; van andere bestanden wordt alleen de naam bewaard.
+              Sleep plankaarten, PvE, MPG-rapport, opnames of notities hierheen. Pdf&apos;s en tekstbestanden (.txt, .md,
+              .csv) worden gelezen op duurzaamheidssignalen; van andere bestanden wordt alleen de naam bewaard.
             </span>
             <button type="button" className={`${buttonStyles.button} ${buttonStyles.dark}`} onClick={() => fileInput.current?.click()}>
               Bestanden kiezen
@@ -152,7 +152,7 @@ export default function ProjectIntake({
                   </div>
                   <small>
                     {formatSize(doc.size)} · toegevoegd {doc.addedAt}
-                    {doc.text ? " · gelezen op signalen" : " · alleen metadata"}
+                    {doc.text ? ` · ${doc.text.length.toLocaleString("nl-NL")} tekens gelezen` : " · alleen metadata"}
                   </small>
                   <input
                     value={doc.note ?? ""}
