@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { budgets, measures as allMeasures, Phase } from "@/lib/data";
 import { buildDemoWorkspace } from "@/lib/demoProjects";
 import { downloadAdvice, buildAdviceText } from "@/lib/exportAdvice";
@@ -11,12 +11,23 @@ import {
   ProjectData,
   ProjectProfile,
   Workspace,
-  clearWorkspace,
   createProject,
-  loadWorkspace,
-  readDocument,
-  useAutosave
+  readDocument
 } from "@/lib/project";
+import {
+  StorageStatus,
+  clearLocalWorkspace,
+  deleteFromBlob,
+  deleteRemoteProject,
+  fetchRemoteProjects,
+  loadActiveId,
+  loadLocalWorkspace,
+  saveActiveId,
+  saveLocalWorkspace,
+  saveRemoteProject,
+  seedRemoteProjects,
+  uploadToBlob
+} from "@/lib/storage";
 import { UpdateField } from "@/lib/types";
 import Approach from "./Approach";
 import DecisionLog from "./DecisionLog";
@@ -42,20 +53,72 @@ import VariantCompare from "./VariantCompare";
 
 export default function DesignAssistant() {
   const [workspace, setWorkspace] = useState<Workspace>(() => buildDemoWorkspace());
+  const [storage, setStorage] = useState<StorageStatus>({ mode: "local", blob: false });
   const [hydrated, setHydrated] = useState(false);
+  const [savedAt, setSavedAt] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
+  const lastSaved = useRef<Map<string, string>>(new Map());
 
-  // Eerder opgeslagen werkruimte terughalen (alleen in de browser, na de eerste render).
+  // Werkruimte laden: eerst Neon via de API, anders lokale opslag (na de eerste render, i.v.m. SSR).
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      const saved = loadWorkspace();
-      if (saved) setWorkspace(saved);
+    let cancelled = false;
+    (async () => {
+      const remote = await fetchRemoteProjects();
+      if (cancelled) return;
+      const preferred = loadActiveId();
+      if (remote) {
+        let projects = remote.projects;
+        if (projects.length === 0) {
+          projects = buildDemoWorkspace().projects;
+          await seedRemoteProjects(projects).catch(() => undefined);
+        }
+        projects.forEach((p) => lastSaved.current.set(p.id, p.updatedAt));
+        const activeId = projects.some((p) => p.id === preferred) ? preferred! : projects[0].id;
+        setWorkspace({ activeId, projects });
+        setStorage({ mode: "remote", blob: remote.blob });
+      } else {
+        const local = loadLocalWorkspace();
+        if (local) {
+          const activeId = local.projects.some((p) => p.id === preferred) ? preferred! : local.activeId;
+          setWorkspace({ ...local, activeId });
+        }
+        setStorage({ mode: "local", blob: false });
+      }
       setHydrated(true);
-    }, 0);
-    return () => window.clearTimeout(timer);
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const savedAt = useAutosave(workspace, hydrated);
+  // Automatisch opslaan: gewijzigde projecten naar Neon, of de hele werkruimte naar localStorage.
+  useEffect(() => {
+    if (!hydrated) return;
+    saveActiveId(workspace.activeId);
+    const timer = window.setTimeout(async () => {
+      const stamp = () => setSavedAt(new Date().toLocaleTimeString("nl-NL", { hour: "2-digit", minute: "2-digit" }));
+      if (storage.mode === "local") {
+        saveLocalWorkspace(workspace);
+        stamp();
+        return;
+      }
+      const changed = workspace.projects.filter((p) => lastSaved.current.get(p.id) !== p.updatedAt);
+      if (changed.length === 0) return;
+      try {
+        for (const p of changed) {
+          const ok = await saveRemoteProject(p);
+          if (!ok) throw new Error(`Opslaan van "${p.profile.name}" mislukt`);
+          lastSaved.current.set(p.id, p.updatedAt);
+        }
+        setSaveError(null);
+        stamp();
+      } catch (error) {
+        setSaveError(String(error instanceof Error ? error.message : error));
+      }
+    }, 500);
+    return () => window.clearTimeout(timer);
+  }, [workspace, hydrated, storage.mode]);
 
   const project = workspace.projects.find((p) => p.id === workspace.activeId) ?? workspace.projects[0];
   const { state, profile } = project;
@@ -81,12 +144,26 @@ export default function DesignAssistant() {
     patchProject((p) => ({ evidence: { ...p.evidence, [key]: status } }));
 
   const addFiles = async (files: FileList | File[]) => {
-    const docs = await Promise.all(Array.from(files).map(readDocument));
+    const docs = await Promise.all(
+      Array.from(files).map(async (file) => {
+        const doc = await readDocument(file);
+        if (storage.mode !== "remote" || !storage.blob) return doc;
+        try {
+          const url = await uploadToBlob(file, project.id);
+          return url ? { ...doc, url } : doc;
+        } catch (error) {
+          return { ...doc, note: `Upload naar Blob mislukt: ${error instanceof Error ? error.message : String(error)}` };
+        }
+      })
+    );
     patchProject((p) => ({ profile: { ...p.profile, documents: [...p.profile.documents, ...docs] } }));
   };
 
-  const removeDocument = (id: string) =>
+  const removeDocument = (id: string) => {
+    const doc = profile.documents.find((d) => d.id === id);
+    if (doc?.url) deleteFromBlob(doc.url);
     patchProject((p) => ({ profile: { ...p.profile, documents: p.profile.documents.filter((d) => d.id !== id) } }));
+  };
 
   const applySignal = (signal: DocumentSignal) =>
     patchProject((p) => ({
@@ -107,6 +184,8 @@ export default function DesignAssistant() {
 
   const deleteProject = () => {
     if (!window.confirm(`Project "${profile.name}" verwijderen? Dit kan niet ongedaan worden gemaakt.`)) return;
+    if (storage.mode === "remote") deleteRemoteProject(project.id);
+    lastSaved.current.delete(project.id);
     setWorkspace((ws) => {
       const rest = ws.projects.filter((p) => p.id !== ws.activeId);
       if (rest.length === 0) {
@@ -117,10 +196,18 @@ export default function DesignAssistant() {
     });
   };
 
-  const restoreDemo = () => {
+  const restoreDemo = async () => {
     if (!window.confirm("Demoprojecten herstellen? Je eigen projecten en wijzigingen worden overschreven.")) return;
-    clearWorkspace();
-    setWorkspace(buildDemoWorkspace());
+    const demo = buildDemoWorkspace();
+    if (storage.mode === "remote") {
+      await Promise.all(workspace.projects.map((p) => deleteRemoteProject(p.id)));
+      lastSaved.current.clear();
+      await seedRemoteProjects(demo.projects);
+      demo.projects.forEach((p) => lastSaved.current.set(p.id, p.updatedAt));
+    } else {
+      clearLocalWorkspace();
+    }
+    setWorkspace(demo);
   };
 
   const filters: FilterState = {
@@ -190,6 +277,8 @@ export default function DesignAssistant() {
             projects={workspace.projects}
             selectedCount={selected.size}
             savedAt={savedAt}
+            storage={storage}
+            saveError={saveError}
             onSwitch={switchProject}
             onNew={newProject}
             onDelete={deleteProject}

@@ -1,4 +1,5 @@
 import { ProjectData } from "@/lib/project";
+import { StorageStatus } from "@/lib/storage";
 import buttonStyles from "./shared/Button.module.css";
 import styles from "./Topbar.module.css";
 
@@ -8,6 +9,8 @@ interface TopbarProps {
   projects: ProjectData[];
   selectedCount: number;
   savedAt: string | null;
+  storage: StorageStatus;
+  saveError: string | null;
   onSwitch: (id: string) => void;
   onNew: () => void;
   onDelete: () => void;
@@ -21,6 +24,8 @@ export default function Topbar({
   projects,
   selectedCount,
   savedAt,
+  storage,
+  saveError,
   onSwitch,
   onNew,
   onDelete,
@@ -36,7 +41,12 @@ export default function Topbar({
           {project.profile.location ? `${project.profile.location} · ` : ""}
           {project.profile.homes ? `${project.profile.homes} woningen · ` : ""}
           {selectedCount} maatregel{selectedCount === 1 ? "" : "en"} geselecteerd
-          {savedAt ? ` · automatisch opgeslagen ${savedAt}` : " · wordt lokaal opgeslagen"}
+          {" · "}
+          <span className={storage.mode === "remote" ? styles.remote : styles.local} title={storage.mode === "remote" ? "Projectdata in Neon, documenten in Vercel Blob" : "Database niet geconfigureerd; opslag in deze browser"}>
+            {storage.mode === "remote" ? (storage.blob ? "Neon + Vercel Blob" : "Neon (Blob niet geconfigureerd)") : "lokale opslag"}
+          </span>
+          {savedAt ? ` · opgeslagen ${savedAt}` : ""}
+          {saveError ? <span className={styles.error}> · {saveError}</span> : null}
         </p>
       </div>
       <div className={styles.actions}>

@@ -39,6 +39,8 @@ export interface ProjectDocument {
   /** Tekstinhoud (alleen voor tekstbestanden, afgekapt) zodat de assistent signalen kan herkennen. */
   text?: string;
   note?: string;
+  /** Publieke URL in Vercel Blob (ontbreekt bij lokale opslag). */
+  url?: string;
 }
 
 export interface ProjectProfile {
