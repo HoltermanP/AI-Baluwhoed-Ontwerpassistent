@@ -19,7 +19,7 @@ export default function HowItWorks({ phase, gap, focusLayer, selectedCount, doss
       title: "Vertel iets over je project",
       body: "Fase, gebouwtype, omvang en huidige CO2-prestatie in het linkerpaneel.",
       status: `Fase: ${phase}`,
-      href: "#dashboard",
+      href: "#project",
       done: true
     },
     {

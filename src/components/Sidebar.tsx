@@ -145,10 +145,10 @@ export default function Sidebar({ state, onChange }: SidebarProps) {
             onChange={(event) => onChange("contextNotes", event.target.value)}
           />
         </label>
-        <div className={styles.dropzone}>
+        <a className={styles.dropzone} href="#project">
           <strong>Documenten toevoegen</strong>
-          <span>Sleep plankaarten, ontwerpdocumenten of een BIM-export hierheen om de projectcontext aan te vullen.</span>
-        </div>
+          <span>Upload plankaarten, PvE of MPG-rapport bij het projectprofiel; de assistent leest tekstbestanden op signalen.</span>
+        </a>
       </section>
 
       <section className={styles.panel}>

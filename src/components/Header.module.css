@@ -153,3 +153,23 @@
     display: none;
   }
 }
+
+.searchPill input {
+  min-height: 0;
+  width: 200px;
+  padding: 0;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  font-size: 13px;
+}
+
+.searchPill input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.searchPill:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
+}

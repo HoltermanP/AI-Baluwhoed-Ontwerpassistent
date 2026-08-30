@@ -2,17 +2,23 @@ import Image from "next/image";
 import styles from "./Header.module.css";
 
 const navItems = [
-  { href: "#dashboard", label: "Dashboard", active: true },
-  { href: "#traject", label: "Traject", active: false },
-  { href: "#winst", label: "Winst", active: false },
-  { href: "#reductiepad", label: "Reductiepad", active: false },
-  { href: "#measures", label: "Maatregelen", active: false },
-  { href: "#varianten", label: "Varianten", active: false },
-  { href: "#dossier", label: "Dossier", active: false },
-  { href: "#besluiten", label: "Besluiten", active: false }
+  { href: "#project", label: "Project" },
+  { href: "#traject", label: "Traject" },
+  { href: "#winst", label: "Winst" },
+  { href: "#reductiepad", label: "Reductiepad" },
+  { href: "#measures", label: "Maatregelen" },
+  { href: "#varianten", label: "Varianten" },
+  { href: "#dossier", label: "Dossier" },
+  { href: "#besluiten", label: "Besluiten" }
 ];
 
-export default function Header() {
+interface HeaderProps {
+  query: string;
+  onQueryChange: (query: string) => void;
+  initials: string;
+}
+
+export default function Header({ query, onQueryChange, initials }: HeaderProps) {
   return (
     <header className={styles.platformBar}>
       <div className={styles.platformLeft}>
@@ -22,29 +28,29 @@ export default function Header() {
         </a>
         <nav className={styles.platformNav} aria-label="Hoofdnavigatie">
           {navItems.map((item) => (
-            <a
-              key={item.href}
-              className={`${styles.navItem} ${item.active ? styles.navOn : ""}`}
-              href={item.href}
-            >
+            <a key={item.href} className={styles.navItem} href={item.href}>
               {item.label}
             </a>
           ))}
         </nav>
       </div>
       <div className={styles.platformActions}>
-        <div className={styles.lang}>
-          <strong>NL</strong>
-          <span>EN</span>
-        </div>
-        <div className={styles.searchPill}>
+        <label className={styles.searchPill}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
             <circle cx="11" cy="11" r="7" />
             <path d="m20 20-3.5-3.5" />
           </svg>
-          <span>Zoek project, maatregel...</span>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => onQueryChange(e.target.value)}
+            placeholder="Zoek maatregel, thema, bron..."
+            aria-label="Zoek in maatregelen"
+          />
+        </label>
+        <div className={styles.avatar} title="Ingelogd als ontwikkelmanager">
+          {initials}
         </div>
-        <div className={styles.avatar}>PH</div>
       </div>
     </header>
   );

@@ -2,12 +2,13 @@ import { Measure, budgets, phaseDecisions } from "./data";
 import { AppState } from "./types";
 import { dataQualityLabel, evidenceNeed, nextAction, relevantStandards, standardHint, statusLabel } from "./measures";
 import { detail, isLastChance, lastPhase } from "./measureDetails";
-import { Decision, EvidenceStatus, Variant, evidenceKey, scoreVariant } from "./project";
+import { Decision, EvidenceStatus, ProjectProfile, Variant, evidenceKey, scoreVariant } from "./project";
 
 interface ProjectExtras {
   evidence: Record<string, EvidenceStatus>;
   decisions: Decision[];
   variants: Variant[];
+  profile?: ProjectProfile;
 }
 
 const evidenceLabels: Record<EvidenceStatus, string> = { todo: "te doen", busy: "in bewerking", done: "gereed" };
@@ -44,6 +45,18 @@ export function buildAdviceText(
     "- Beheer via dynamische bronlaag: NMD, EPD/NIBE, projectdata en lessons learned.",
     "",
     "Projectcontext",
+    ...(extras?.profile
+      ? [
+          `Project: ${extras.profile.name}`,
+          `Locatie: ${extras.profile.location || "-"}`,
+          `Programma: ${extras.profile.homes || "-"} woningen`,
+          `Opdrachtgever: ${extras.profile.client || "-"}`,
+          `Omschrijving: ${extras.profile.description || "-"}`,
+          `Ambities: ${extras.profile.ambitions || "-"}`,
+          `Team: ${extras.profile.team.filter((t) => t.name).map((t) => `${t.role}: ${t.name}`).join("; ") || "-"}`,
+          `Documenten: ${extras.profile.documents.map((d) => d.name).join(", ") || "-"}`
+        ]
+      : []),
     `Fase: ${state.phase}`,
     `Projecttype: ${project.label}`,
     `BVO: ${state.bvo} m2`,
@@ -113,12 +126,13 @@ export function buildAdviceText(
   return lines.join("\n");
 }
 
-export function downloadAdvice(text: string): void {
+export function downloadAdvice(text: string, name = "project"): void {
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "project";
   const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "blauwhoed-ontwerpassistent-advies.txt";
+  link.download = `blauwhoed-besluitmemo-${slug}.txt`;
   link.click();
   URL.revokeObjectURL(url);
 }

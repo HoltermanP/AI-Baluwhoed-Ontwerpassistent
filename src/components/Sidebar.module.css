@@ -52,6 +52,8 @@
 
 .dropzone {
   display: grid;
+  text-decoration: none;
+  cursor: pointer;
   gap: 6px;
   padding: 14px;
   color: var(--muted);

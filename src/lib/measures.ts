@@ -10,6 +10,7 @@ export interface FilterState {
   existingStructure: boolean;
   highRise: boolean;
   waterReady: boolean;
+  query?: string;
 }
 
 export function scoreTotal(measure: Measure, filters: FilterState): number {
@@ -26,6 +27,14 @@ export function getFilteredMeasures(measures: Measure[], filters: FilterState): 
     .filter((measure) => filters.theme === "Alle thema's" || measure.theme === filters.theme)
     .filter((measure) => filters.layer === "Alle lagen" || measure.layer === filters.layer)
     .filter((measure) => filters.status === "all" || measure.status === filters.status)
+    .filter((measure) => {
+      const q = filters.query?.trim().toLowerCase();
+      if (!q) return true;
+      return [measure.title, measure.description, measure.theme, measure.layer, measure.source, measure.id]
+        .join(" ")
+        .toLowerCase()
+        .includes(q);
+    })
     .filter((measure) => {
       if (measure.id === "transformeren") return filters.existingStructure || filters.phase === "Acquisitie";
       if (measure.id === "houthybride") return filters.highRise || filters.phase !== "DO";

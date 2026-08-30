@@ -17,3 +17,24 @@
     grid-template-columns: 1fr;
   }
 }
+
+.clear {
+  padding: 0;
+  color: var(--blue);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-size: inherit;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
+.empty {
+  margin: 0 0 12px;
+  padding: 14px;
+  color: var(--muted);
+  background: var(--soft);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
