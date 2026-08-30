@@ -1,4 +1,5 @@
-import { Measure } from "@/lib/data";
+import { Measure, Phase } from "@/lib/data";
+import { detail, isLastChance, lastPhase } from "@/lib/measureDetails";
 import {
   capitalize,
   databaseInstruction,
@@ -12,14 +13,18 @@ import styles from "./MeasureCard.module.css";
 
 interface MeasureCardProps {
   measure: Measure;
-  phase: string;
+  phase: Phase;
   selected: boolean;
   score: number;
   onToggle: () => void;
 }
 
 export default function MeasureCard({ measure, phase, selected, score, onToggle }: MeasureCardProps) {
+  const [low, high] = detail(measure).reduction;
+  const lastChance = isLastChance(measure, phase);
   const meta: [string, string][] = [
+    ["CO2-effect", high > 0 ? `${low}–${high} kg/m2 BVO` : "geen direct CO2-effect"],
+    ["Uiterlijk besluiten", lastPhase(measure)],
     ["Thema", measure.theme],
     ["6S", measure.layer],
     ["Fases", measure.phases.join(", ")],
@@ -35,6 +40,7 @@ export default function MeasureCard({ measure, phase, selected, score, onToggle 
       <div className={styles.measureTop}>
         <div>
           <span className={`${styles.badge} ${styles[measure.status]}`}>{statusLabel(measure.status)}</span>
+          {lastChance && <span className={`${styles.badge} ${styles.lastChance}`}>Laatste kans</span>}
           <h3>{measure.title}</h3>
         </div>
         <button

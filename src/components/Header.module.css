@@ -5,10 +5,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
-  padding: 0 32px;
-  color: white;
-  background: var(--ink);
+  height: 72px;
+  padding: 0 40px;
+  color: var(--ink);
+  background: #fff;
+  border-bottom: 1px solid var(--line);
 }
 
 .platformLeft,
@@ -20,84 +21,108 @@
 }
 
 .platformLeft {
-  gap: 32px;
+  gap: 40px;
 }
 
 .platformBrand {
-  gap: 11px;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
 }
 
-.platformMark {
-  display: grid;
-  place-items: center;
-  width: 28px;
-  height: 28px;
-  color: var(--ink);
-  background: white;
-  border-radius: 7px;
-  font-size: 14px;
-  font-weight: 800;
-}
-
-.platformBrand strong {
-  font-size: 15px;
-  letter-spacing: 0.01em;
+.platformBrand img {
+  display: block;
+  height: 20px;
+  width: auto;
 }
 
 .platformBrand span {
-  padding-left: 11px;
-  color: rgba(255, 255, 255, 0.52);
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  padding-left: 14px;
+  color: var(--muted);
+  border-left: 1px solid var(--line);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 
 .platformNav {
-  gap: 2px;
+  gap: 4px;
 }
 
 .navItem {
-  padding: 7px 13px;
-  color: rgba(255, 255, 255, 0.72);
-  border-radius: 7px;
-  font-size: 13px;
+  position: relative;
+  padding: 8px 12px;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 700;
   text-decoration: none;
-  transition: background 0.15s, color 0.15s;
+  transition: color 0.15s;
+}
+
+.navItem::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 2px;
+  height: 2px;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.2s ease-in-out;
 }
 
 .navItem:hover,
 .navOn {
-  color: white;
-  background: rgba(255, 255, 255, 0.15);
+  color: var(--blue);
 }
 
-.navOn {
-  font-weight: 600;
+.navItem:hover::after,
+.navOn::after {
+  transform: scaleX(1);
 }
 
 .platformActions {
   gap: 18px;
 }
 
+.lang {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.lang strong {
+  color: var(--blue);
+}
+
+.lang span {
+  color: var(--faint);
+}
+
 .searchPill {
-  padding: 7px 12px;
-  color: rgba(255, 255, 255, 0.7);
-  background: rgba(255, 255, 255, 0.09);
-  border-radius: 8px;
-  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  color: var(--muted);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--pill);
+  font-size: 13px;
 }
 
 .avatar {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   color: white;
-  background: #3f6bd6;
+  background: var(--blue);
   border-radius: 50%;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 @media (max-width: 1180px) {

@@ -1,23 +1,25 @@
+import Image from "next/image";
 import styles from "./Header.module.css";
 
 const navItems = [
   { href: "#dashboard", label: "Dashboard", active: true },
-  { href: "#phaseDecision", label: "Fasebesluit", active: false },
+  { href: "#traject", label: "Traject", active: false },
+  { href: "#winst", label: "Winst", active: false },
+  { href: "#reductiepad", label: "Reductiepad", active: false },
   { href: "#measures", label: "Maatregelen", active: false },
-  { href: "#sourceLayer", label: "Databronnen", active: false }
+  { href: "#varianten", label: "Varianten", active: false },
+  { href: "#dossier", label: "Dossier", active: false },
+  { href: "#besluiten", label: "Besluiten", active: false }
 ];
 
 export default function Header() {
   return (
     <header className={styles.platformBar}>
       <div className={styles.platformLeft}>
-        <div className={styles.platformBrand}>
-          <div className={styles.platformMark} aria-hidden="true">
-            B
-          </div>
-          <strong>Blauwhoed</strong>
+        <a className={styles.platformBrand} href="#top" aria-label="Blauwhoed Ontwerpassistent">
+          <Image src="/bg/logo.png" alt="Logo Blauwhoed" width={188} height={20} priority />
           <span>Ontwerpassistent</span>
-        </div>
+        </a>
         <nav className={styles.platformNav} aria-label="Hoofdnavigatie">
           {navItems.map((item) => (
             <a
@@ -31,7 +33,17 @@ export default function Header() {
         </nav>
       </div>
       <div className={styles.platformActions}>
-        <div className={styles.searchPill}>Zoek project, maatregel...</div>
+        <div className={styles.lang}>
+          <strong>NL</strong>
+          <span>EN</span>
+        </div>
+        <div className={styles.searchPill}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+          <span>Zoek project, maatregel...</span>
+        </div>
         <div className={styles.avatar}>PH</div>
       </div>
     </header>

@@ -1,9 +1,9 @@
 .measuresSection {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius);
   padding: 20px;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .measures {

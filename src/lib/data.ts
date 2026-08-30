@@ -74,11 +74,11 @@ export const questions: [string, string][] = [
   ["Besluit", "Welke optie scoort het best op duurzaamheid, techniek, financieel effect en kansrijkheid?"]
 ];
 
-export const gerbenNeeds: [string, string][] = [
-  ["Handvat", "Ontwikkelmanager ziet per fase welke duurzame keuze nu nodig is."],
-  ["Niet te globaal", "Elke maatregel heeft status, criteria, vervolgstap en bron."],
-  ["Niet te specifiek", "Producten en leveranciers blijven in een aparte, actualiseerbare databron."],
-  ["Aansluiten proces", "Keuzes zijn gekoppeld aan fasebesluiten, 6S-laag en marktstandaarden."]
+export const approachPillars: [string, string][] = [
+  ["Per fase", "De ontwikkelmanager ziet per projectfase welke duurzame keuze nu op tafel ligt."],
+  ["Concreet", "Elke maatregel heeft status, criteria, vervolgstap en bron."],
+  ["Actueel", "Producten en leveranciers staan in een aparte, actualiseerbare databron."],
+  ["Procesgericht", "Keuzes zijn gekoppeld aan fasebesluiten, 6S-laag en marktstandaarden."]
 ];
 
 export const phaseDecisions: Record<Phase, [string, string][]> = {

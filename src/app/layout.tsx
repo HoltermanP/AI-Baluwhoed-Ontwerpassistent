@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, Newsreader } from "next/font/google";
+import { Nunito_Sans } from "next/font/google";
 import "./globals.css";
 
-const hankenGrotesk = Hanken_Grotesk({
-  variable: "--font-hanken-grotesk",
-  subsets: ["latin"]
-});
-
-const newsreader = Newsreader({
-  variable: "--font-newsreader",
-  subsets: ["latin"]
+// Blauwhoed.nl gebruikt Avenir; Nunito Sans is de vrij beschikbare tegenhanger.
+const nunitoSans = Nunito_Sans({
+  variable: "--font-brand",
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700", "800"]
 });
 
 export const metadata: Metadata = {
@@ -23,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="nl" className={`${hankenGrotesk.variable} ${newsreader.variable}`}>
+    <html lang="nl" className={nunitoSans.variable}>
       <body>{children}</body>
     </html>
   );

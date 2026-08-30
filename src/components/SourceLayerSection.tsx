@@ -8,7 +8,7 @@ export default function SourceLayerSection() {
         <span className="step">D</span>
         <div>
           <h2>Dynamische databronnen</h2>
-          <p>Beheerlaag tegen veroudering van product- en leveranciersinformatie.</p>
+          <p>Actuele product- en leveranciersinformatie, los van de vaste ontwerpprincipes.</p>
         </div>
       </div>
       <div className={styles.sourceGrid}>

@@ -1,22 +1,40 @@
 "use client";
 
-import { useState } from "react";
-import { budgets, measures as allMeasures } from "@/lib/data";
+import { useEffect, useMemo, useState } from "react";
+import { budgets, measures as allMeasures, Phase } from "@/lib/data";
 import { downloadAdvice, buildAdviceText } from "@/lib/exportAdvice";
-import { FilterState, getFilteredMeasures, getFocus, scoreTotal } from "@/lib/measures";
-import { relevantStandards } from "@/lib/measures";
+import { FilterState, getFilteredMeasures, getFocus, relevantStandards, scoreTotal } from "@/lib/measures";
+import {
+  Decision,
+  EvidenceStatus,
+  ProjectData,
+  Variant,
+  clearProject,
+  defaultVariants,
+  loadProject,
+  useAutosave
+} from "@/lib/project";
 import { AppState, UpdateField } from "@/lib/types";
+import Approach from "./Approach";
+import DecisionLog from "./DecisionLog";
 import DecisionTree from "./DecisionTree";
-import GerbenBrief from "./GerbenBrief";
+import EvidenceDossier, { dossierProgress } from "./EvidenceDossier";
+import Footer from "./Footer";
 import Header from "./Header";
+import Hero from "./Hero";
+import HowItWorks from "./HowItWorks";
+import ImpactByLayer from "./ImpactByLayer";
 import MeasuresSection from "./MeasuresSection";
 import Metrics from "./Metrics";
+import PhaseTimeline from "./PhaseTimeline";
 import Principles from "./Principles";
 import ProcessMap from "./ProcessMap";
+import ReductionPath from "./ReductionPath";
 import shellStyles from "./Shell.module.css";
 import Sidebar from "./Sidebar";
 import SourceLayerSection from "./SourceLayerSection";
 import Topbar from "./Topbar";
+import VariantCompare from "./VariantCompare";
 
 const initialState: AppState = {
   phase: "Haalbaarheid",
@@ -38,6 +56,33 @@ const initialState: AppState = {
 export default function DesignAssistant() {
   const [state, setState] = useState<AppState>(initialState);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [evidence, setEvidence] = useState<Record<string, EvidenceStatus>>({});
+  const [decisions, setDecisions] = useState<Decision[]>([]);
+  const [variants, setVariants] = useState<Variant[]>(defaultVariants);
+  const [hydrated, setHydrated] = useState(false);
+
+  // Eerder opgeslagen project terughalen (alleen in de browser).
+  useEffect(() => {
+    // Na de eerste render (buiten de effect-body) zodat SSR en client dezelfde eerste markup delen.
+    const timer = window.setTimeout(() => {
+      const saved = loadProject();
+      if (saved) {
+        if (saved.state) setState({ ...initialState, ...saved.state });
+        if (saved.selected) setSelected(new Set(saved.selected));
+        if (saved.evidence) setEvidence(saved.evidence);
+        if (saved.decisions) setDecisions(saved.decisions);
+        if (saved.variants?.length) setVariants(saved.variants);
+      }
+      setHydrated(true);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const projectData: ProjectData = useMemo(
+    () => ({ state, selected: [...selected], evidence, decisions, variants }),
+    [state, selected, evidence, decisions, variants]
+  );
+  const savedAt = useAutosave(projectData, hydrated);
 
   const updateField: UpdateField = (key, value) => {
     setState((previous) => ({ ...previous, [key]: value }));
@@ -50,6 +95,19 @@ export default function DesignAssistant() {
       else next.add(id);
       return next;
     });
+  };
+
+  const setEvidenceStatus = (key: string, status: EvidenceStatus) =>
+    setEvidence((previous) => ({ ...previous, [key]: status }));
+
+  const resetProject = () => {
+    if (!window.confirm("Project leegmaken? Selecties, dossier, besluiten en varianten worden gewist.")) return;
+    clearProject();
+    setState(initialState);
+    setSelected(new Set());
+    setEvidence({});
+    setDecisions([]);
+    setVariants(defaultVariants);
   };
 
   const filters: FilterState = {
@@ -65,6 +123,8 @@ export default function DesignAssistant() {
   };
 
   const filteredMeasures = getFilteredMeasures(allMeasures, filters);
+  const selectedMeasures = allMeasures.filter((measure) => selected.has(measure.id));
+  const decidedIds = new Set(decisions.map((d) => d.measureId));
 
   const scores = new Map<string, number>();
   filteredMeasures.forEach((measure) => scores.set(measure.id, scoreTotal(measure, filters)));
@@ -82,19 +142,35 @@ export default function DesignAssistant() {
     unknown: "start met CO2-indicatie"
   }[state.dataQuality];
 
+  const dossier = dossierProgress(selectedMeasures, evidence);
+
   const handleExport = () => {
-    const chosen = allMeasures.filter((measure) => selected.has(measure.id));
-    const text = buildAdviceText(state, chosen, filteredMeasures);
+    const text = buildAdviceText(state, selectedMeasures, filteredMeasures, { evidence, decisions, variants });
     downloadAdvice(text);
   };
 
   return (
     <>
       <Header />
+      <Hero phase={state.phase} />
       <main className={shellStyles.shell}>
         <Sidebar state={state} onChange={updateField} />
         <section id="dashboard" className={shellStyles.workspace}>
-          <Topbar phase={state.phase} onExport={handleExport} />
+          <Topbar
+            phase={state.phase}
+            selectedCount={selected.size}
+            savedAt={savedAt}
+            onExport={handleExport}
+            onReset={resetProject}
+          />
+          <HowItWorks
+            phase={state.phase}
+            gap={gap}
+            focusLayer={focus.layer}
+            selectedCount={selected.size}
+            dossierDone={dossier.done}
+            dossierTotal={dossier.total}
+          />
           <Metrics
             budgetValue={project.value}
             gap={gap}
@@ -102,11 +178,30 @@ export default function DesignAssistant() {
             focusLayer={focus.layer}
             focusLabel={focusLabel}
           />
-          <GerbenBrief />
+          <PhaseTimeline
+            phase={state.phase}
+            measures={allMeasures}
+            selected={selected}
+            decidedIds={decidedIds}
+            onSelectPhase={(phase: Phase) => updateField("phase", phase)}
+          />
+          <ImpactByLayer
+            phase={state.phase}
+            measures={allMeasures}
+            selected={selected}
+            activeLayer={state.layer}
+            teamGuess={state.impactPart}
+            onSelectLayer={(layer) => updateField("layer", layer)}
+          />
+          <ReductionPath
+            co2={state.co2}
+            budget={project.value}
+            bvo={state.bvo}
+            selectedMeasures={selectedMeasures}
+            candidates={filteredMeasures}
+            onToggle={toggleMeasure}
+          />
           <ProcessMap phase={state.phase} standards={standards} />
-          <Principles />
-          <DecisionTree />
-          <SourceLayerSection />
           <MeasuresSection
             measures={filteredMeasures}
             phase={state.phase}
@@ -114,8 +209,27 @@ export default function DesignAssistant() {
             scores={scores}
             onToggle={toggleMeasure}
           />
+          <VariantCompare
+            variants={variants}
+            budget={project.value}
+            bvo={state.bvo}
+            onChange={setVariants}
+            onUseAsCurrent={(co2) => updateField("co2", co2)}
+          />
+          <EvidenceDossier
+            phase={state.phase}
+            selectedMeasures={selectedMeasures}
+            evidence={evidence}
+            onSetStatus={setEvidenceStatus}
+          />
+          <DecisionLog phase={state.phase} measures={allMeasures} decisions={decisions} onChange={setDecisions} />
+          <Approach />
+          <Principles />
+          <DecisionTree />
+          <SourceLayerSection />
         </section>
       </main>
+      <Footer />
     </>
   );
 }

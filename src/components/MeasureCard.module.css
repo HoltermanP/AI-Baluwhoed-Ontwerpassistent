@@ -5,7 +5,7 @@
   padding: 16px;
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius);
   transition: box-shadow 0.15s, transform 0.15s, border-color 0.15s;
 }
 
@@ -15,8 +15,8 @@
 }
 
 .selected {
-  border-color: var(--green);
-  box-shadow: 0 0 0 3px rgba(27, 138, 90, 0.12);
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
 }
 
 .measureTop {
@@ -28,12 +28,14 @@
 .badge {
   display: inline-block;
   margin-bottom: 8px;
-  padding: 4px 9px;
+  padding: 4px 10px;
   color: var(--stone);
   background: var(--stone-soft);
-  border-radius: 20px;
+  border-radius: var(--pill);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .verplicht {
@@ -73,19 +75,19 @@
 .measureMeta div {
   padding: 10px;
   background: var(--soft);
-  border-radius: 9px;
+  border-radius: var(--radius);
 }
 
 .measureMeta dt {
   color: var(--faint);
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
 }
 
 .measureMeta dd {
   margin: 3px 0 0;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -95,7 +97,7 @@
   margin: 0;
   padding-left: 18px;
   color: var(--ink);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.45;
 }
 
@@ -132,4 +134,10 @@
   .scoreRow {
     grid-template-columns: 1fr;
   }
+}
+
+.lastChance {
+  margin-left: 6px;
+  color: #8a6408;
+  background: var(--yellow-soft);
 }

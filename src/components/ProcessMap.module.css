@@ -1,9 +1,9 @@
 .processMap {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius);
   padding: 20px;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .phaseDecision {
@@ -16,19 +16,19 @@
   padding: 13px;
   background: var(--soft);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius);
 }
 
 .decisionItem strong {
   display: block;
   margin-bottom: 6px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .decisionItem span {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.45;
 }
 
@@ -43,20 +43,20 @@
   padding: 13px;
   background: var(--soft);
   border: 1px solid var(--line);
-  border-radius: 10px;
-  border-left: 4px solid var(--green);
+  border-radius: var(--radius);
+  border-left: 4px solid var(--blue);
 }
 
 .standard strong {
   display: block;
   margin-bottom: 6px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .standard span {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.45;
 }
 

@@ -1,0 +1,68 @@
+.footer {
+  position: relative;
+  padding: 72px 40px 40px;
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(5, 20, 40, 0.88), rgba(5, 20, 40, 0.96)),
+    url("/bg/gebouw.jpg") center / cover no-repeat;
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px 40px;
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.logo {
+  display: block;
+  height: 22px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.tagline {
+  margin: 14px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.links a {
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.links a:hover {
+  color: #8fddfe;
+}
+
+.copy {
+  grid-column: 1 / -1;
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .footer {
+    padding: 48px 20px 32px;
+  }
+
+  .inner {
+    grid-template-columns: 1fr;
+  }
+}

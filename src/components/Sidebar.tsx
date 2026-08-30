@@ -10,16 +10,6 @@ interface SidebarProps {
 export default function Sidebar({ state, onChange }: SidebarProps) {
   return (
     <aside className={styles.sidebar} aria-label="Projectcontext">
-      <div className={styles.brand}>
-        <div className={styles.brandMark} aria-hidden="true">
-          B
-        </div>
-        <div>
-          <p className="eyebrow">Duurzaam ontwerp</p>
-          <h1>Blauwhoed Ontwerpassistent</h1>
-        </div>
-      </div>
-
       <section className={styles.panel}>
         <div className="section-heading">
           <span className="step">1</span>
@@ -156,8 +146,8 @@ export default function Sidebar({ state, onChange }: SidebarProps) {
           />
         </label>
         <div className={styles.dropzone}>
-          <strong>Uploadzone prototype</strong>
-          <span>Plankaarten, ontwerpdocumenten en BIM-export zouden hier de contextlaag vullen.</span>
+          <strong>Documenten toevoegen</strong>
+          <span>Sleep plankaarten, ontwerpdocumenten of een BIM-export hierheen om de projectcontext aan te vullen.</span>
         </div>
       </section>
 

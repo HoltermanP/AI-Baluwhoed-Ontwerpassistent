@@ -1,9 +1,9 @@
 .sourceLayer {
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: 14px;
+  border-radius: var(--radius);
   padding: 20px;
-  margin-bottom: 18px;
+  margin-bottom: 22px;
 }
 
 .sourceGrid {
@@ -17,19 +17,19 @@
   padding: 13px;
   background: var(--soft);
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius);
 }
 
 .sourceItem strong {
   display: block;
   margin-bottom: 6px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .sourceItem span {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.45;
 }
 
@@ -41,7 +41,7 @@
   background: var(--stone-soft);
   border-radius: 20px;
   font-size: 10.5px;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 @media (max-width: 1180px) {

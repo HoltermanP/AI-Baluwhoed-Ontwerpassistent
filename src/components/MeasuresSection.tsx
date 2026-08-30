@@ -1,10 +1,10 @@
-import { Measure } from "@/lib/data";
+import { Measure, Phase } from "@/lib/data";
 import MeasureCard from "./MeasureCard";
 import styles from "./MeasuresSection.module.css";
 
 interface MeasuresSectionProps {
   measures: Measure[];
-  phase: string;
+  phase: Phase;
   selected: Set<string>;
   scores: Map<string, number>;
   onToggle: (id: string) => void;

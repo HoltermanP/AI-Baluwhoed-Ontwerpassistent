@@ -1,9 +1,23 @@
+/* Fotoband met groen thema (moestuin) als achtergrond */
 .principles {
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 18px;
+  position: relative;
+  color: #fff;
+  background:
+    linear-gradient(180deg, rgba(5, 20, 40, 0.84), rgba(5, 20, 40, 0.9)),
+    url("/bg/groen.jpg") center / cover no-repeat;
+  border-radius: var(--radius);
+  padding: 32px;
+  margin-bottom: 22px;
+}
+
+.principles :global(.section-heading) p {
+  color: #fff;
+}
+
+.principles :global(.section-heading) .step,
+.principles :global(.step) {
+  color: var(--blue);
+  background: #fff;
 }
 
 .principleList {
@@ -13,24 +27,27 @@
 }
 
 .principle {
-  min-height: 132px;
-  padding: 16px;
-  background: var(--soft);
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  min-height: 140px;
+  padding: 18px;
+  color: var(--ink);
+  background: #fff;
+  border-radius: var(--radius);
 }
 
 .principle span {
   display: block;
   margin-bottom: 6px;
-  font-weight: 700;
   color: var(--blue);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .principle p {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.45;
 }
 
